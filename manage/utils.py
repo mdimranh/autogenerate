@@ -8,7 +8,18 @@ import os
 #     for url in urls:
 #         app.add_url_rule(url[0], methods=url[1], view_func=url[2])
 
-
+dataTypes = {
+    "double": "Float",
+    "string": "String",
+    "object": "Dict",
+    "array": "List",
+    "objectId": "Dict",
+    "bool": "Boolean",
+    "date": "DateTime",
+    "int": "Integer",
+    "timestamp": "TimeDelta",
+    "decimal": "Decimal"
+}
 
 class formGenerate:
     def __init__(self, schema, coll):
@@ -30,6 +41,6 @@ class {self.coll}Schema(Schema):
     def fields(self):
         fld = """"""
         for field in self.schema['fields']:
-            fld+=f"    {field['name']} = fields.{field['type']}\n"
+            fld+=f"    {field['name']} = fields.{dataTypes.get(field['type'])}(required={'required' in field and field['required'] == True})\n"
 
         return fld
