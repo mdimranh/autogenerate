@@ -1,10 +1,10 @@
-from __main__ import app
 import os
 
+from __main__ import app
 from flask import request
 
+from .utils import apiGenerate, formGenerate
 from .validator import collectionSchema
-from .utils import formGenerate
 
 # class CreateCollection:
 #     def __init__(self, name, fields):
@@ -22,11 +22,24 @@ def generate_collection():
     try:
         result = collectionSchema().load(data)
 
-        root = os.path.join(app.root_path, 'collections')
+        root = os.path.join(app.root_path, 'collection')
         if not os.path.exists(os.path.join(root, result['name'])):
             os.makedirs(os.path.join(root, result['name']))
-            formGenerate(data, result['name']).generate()
-
+            formGenerate(result, result['name']).generate()
+            apiGenerate(result, result['name']).generate()
+        else:
+            formGenerate(result, result['name']).generate()
+            apiGenerate(result, result['name']).generate()
+        folder = './collection'
+        sub_folders = [name for name in os.listdir(folder) if os.path.isdir(os.path.join(folder, name))]
+        
+        with open(os.path.join(app.root_path, 'collection/urls.py'), "w") as file:
+            imp = """"""
+            for folder in sub_folders:
+                if folder != "__pycache__":
+                    imp+=f"from collection.{folder} import views\n"
+            file.write(imp)
+        
     except:
         errors = collectionSchema().validate(data)
         if errors:

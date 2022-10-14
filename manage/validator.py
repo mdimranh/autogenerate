@@ -1,7 +1,9 @@
-from marshmallow import Schema, fields, ValidationError, validate, validates_schema
 import re
 
-dataTypes = ["double", "string", "object", "array", "binData", "undefined", "objectId", "bool", "date", "null", "regex", "dbPointer", "javascript", "symbol", "javascriptWithScope", "int", "timestamp", "long", "decimal", "minKey", "maxKey" ]
+from marshmallow import (Schema, ValidationError, fields, validate,
+                         validates_schema)
+
+dataTypes = ["double", "string", "object", "array", "binData", "undefined", "objectId", "bool", "date", "null", "regex", "dbPointer", "javascript", "symbol", "javascriptWithScope", "int", "timestamp", "long", "decimal", "minKey", "maxKey", "email", "json" ]
 
 class stripName(fields.Field):
 
@@ -27,6 +29,7 @@ class Fields(Schema):
     type = fields.String(validate=validate.OneOf(dataTypes), required=True)
     validate = fields.Nested(Validates)
     object = fields.List(fields.Nested(lambda: Fields()), required=False)
+    required = fields.Bool(missing=False)
 
     @validates_schema
     def validate_required_fields(self, data, **kwargs):

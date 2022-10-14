@@ -2,10 +2,10 @@ from flask import Flask
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
-
+import collection.urls
 from auth import views
-from manage import utils
-from manage import generator
+from manage import generator, utils
+
 
 @app.route("/")
 def Home():
